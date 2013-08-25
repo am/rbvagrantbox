@@ -1,3 +1,5 @@
+$user = 'vagrant'
+
 group { "puppet":
   ensure => "present",
 }
@@ -5,7 +7,7 @@ group { "puppet":
 File { owner => 0, group => 0, mode => 0644 }
 
 file { '/etc/motd':
-  content => "Welcome to your Vagrant-built virtual machine!\nManaged by Puppet.\n"
+  content => "Welcome to your'vagrant'built virtual machine!\nManaged by Puppet.\n"
 }
 
 
@@ -25,5 +27,19 @@ include apt
 include redis
 include mysql
 
-rbenv::install{"vagrant":}
+# rbenv
+$rv = '1.9.3-p327'
 
+rbenv::install{$user:}
+
+# rbenv - ruby
+rbenv::compile { $rv:
+  user => $user,
+  global => true
+}
+
+# rbenv - gems
+rbenv::gem { "rails":
+  user => $user,
+  ruby => $rv,
+}
