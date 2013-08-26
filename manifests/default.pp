@@ -1,5 +1,3 @@
-$user = 'vagrant'
-
 # Make sure apt-get -y update runs before anything else.
 stage { 'preinstall':
   before => Stage['main']
@@ -42,18 +40,21 @@ class { 'install_mysql': }
 
 
 # rbenv
+$v_user = 'vagrant'
 $rv = '1.9.3-p327'
 
-rbenv::install{$user:}
+rbenv::install{"${v_user}":}
 
 # rbenv - ruby
-rbenv::compile { $rv:
-  user => $user,
+rbenv::compile { "${rv}":
+  user => "${v_user}",
   global => true
 }
 
+notice("The user is: ${v_user}")
+
 # rbenv - gems
-rbenv::gem { "rails":
-  user => $user,
-  ruby => $rv,
+rbenv::gem { 'rails':
+  user => "${v_user}",
+  ruby => "${rv}",
 }
